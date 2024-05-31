@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html>
+<title>Dot Game</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+@import url("https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap");
+
+ html * {
+	 box-sizing: border-box;
+	 font-family: "Press Start 2P", sans-serif;
+}
+ body {
+	 margin: 0;
+	 display: flex;
+	 flex-direction: column;
+	 height: 100vh;
+}
+ @media only screen and (min-width: 600px) {
+	 body {
+     justify-content: center;
+     align-items: center;
+	 background-color: #d3cae0;
+	 background-image: url("dots.png");
+	 background-repeat: repeat;
+	 background-size: 8% 8%;
+	}
+}
+ #app {
+	 border: 10px solid #6b59a4;
+	 background: #6b59a4;
+	 box-shadow: 3px 3px 15px 5px #000 80;
+	 overflow: hidden;
+	 height: 100vh;
+	 display: flex;
+	 flex-direction: column;
+}
+ @media only screen and (min-width: 600px) {
+	 #app {
+	 height: auto;
+	 border-radius: 20px;
+	 width:740px;
+	}
+}
+ #controls {
+	 padding: 20px;
+	 color: white;
+	 margin-bottom: 10px;
+	 display: flex;
+	 flex-wrap: wrap;
+	 justify-content: space-between;
+	 align-items: center;
+}
+ @media only screen and (min-width: 600px) {
+	 #controls {
+	 padding: 10px;
+	}
+}
+ #controls .btn {
+	 padding: 10px 30px;
+	 font-size: 20px;
+	 border-radius: 15px;
+	 outline: none;
+	 color: white;
+	 border: none;
+}
+ #controls .btn:hover {
+	 opacity: 60%;
+	 cursor: pointer;
+}
+ #start {
+	 background: green;
+}
+ #pause {
+	 background: red;
+	 display: none;
+}
+ .slider {
+	 flex-basis: 100%;
+	 margin-top: 10px;
+	 display: flex;
+	 justify-content: space-between;
+	 align-items: center;
+}
+ .slider .icon-img {
+	 width: 40px;
+	 height: 40px;
+	 background-size: cover;
+}
+ .slider .slower {
+	 margin-right: 5px;
+	 background-image: url("turtle.png");
+}
+ .slider .faster {
+	 margin-left: 5px;
+	 background-image: url("rabbit.png");
+}
+ #speedSlider {
+	 flex: 1 auto;
+	 -webkit-appearance: none;
+	 height: 5px;
+	 border-radius: 5px;
+	 background: black;
+	 cursor: pointer;
+}
+ #speedSlider::-webkit-slider-thumb {
+	 -webkit-appearance: none;
+	 width: 30px;
+	 height: 20px;
+	 background: green;
+	 border-radius: 5px;
+}
+ #scoreBoard {
+	 font-size: 14px;
+	 flex-basis: 50%;
+	 float: right;
+}
+ #score {
+	 font-size: 30px;
+	 margin: 15px;
+	 float: right;
+}
+ #game {
+	 height: 100%;
+	 margin-bottom: 20px;
+	 position: relative;
+	 overflow: hidden;
+	 border-radius: 15px;
+	 background: black;
+}
+ @media only screen and (min-width: 600px) {
+	 #game {
+	 height: 500px;
+	 margin-bottom: 0;
+	}
+}
+ #overlay {
+	 position: absolute;
+	 top: 0;
+	 left: 0;
+	 height: 100%;
+	 width: 100%;
+	 background: #000 90;
+	 color: white;
+	 font-size: 32px;
+	 justify-content: center;
+	 align-items: center;
+	 display: none;
+}
+ #overlay.visible {
+	 display: flex;
+	 z-index: 9;
+	 user-select: none;
+}
+ .dot {
+	 background-image: url("dot-candy.jpg");
+	 padding: 0;
+	 outline: none;
+	 border: 2px solid #25c525;
+	 border-radius: 50%;
+	 background: #25c525 70;
+	 margin: 0;
+	 position: absolute;
+	 animation: fallingDots;
+	 animation-iteration-count: 1;
+	 animation-play-state: paused;
+	 animation-fill-mode: forwards;
+}
+ .dot.falling {
+	 animation-play-state: running;
+}
+ @keyframes fadeIn {
+	 0% {
+	 opacity: 0;
+	 scale: 0.1;
+	}
+	 100% {
+	 opacity: 1;
+	 scale: 1;
+	}
+}
+ @keyframes fallingDots {
+	 0% {
+	 top: 0;
+	}
+	 99.99% {
+	 top: 1000px;
+	}
+	 100% {
+	 display: none;
+	}
+}
+</style>
+
+<body>
+
+<div style="text-align: center; background-color: #fafafa; border-radius: 20px; padding: 2px 14px 2px 14px;">
+<h2 style="color: Navy;">Welcome to Dot Land!</h2>
+<p class="w3-large">Click on the falling dots and earn valuable points</p>
+</div>
+
+<br>
+
+<div id="app">
+
+<div id="controls">
+  <h3 style="margin-top: -20px;"><strong>Control Central</strong></h3>  
+  <br>
+        <div style="float: right; margin-right; 40px;" id="scoreBoard">
+            <label style="float: right; margin-right; 40px;"><h3>Score</h3></label><br><br>
+          <p style="float: right; margin-right: -70px;" id="score">0</p>
+        </div>
+		
+				<div style="text-align: center;">	
+				<input class="btn" type="button" id="start" value="Start" /> 
+				<input class="btn" type="button" id="pause" value="Pause" /><br>
+				</div>
+  
+  <br><br>
+  
+  <div style="text-align: center;" class="slider">
+  <input type="range" min="10" max="100" value="50" class="slider" step="10" id="speedSlider"> 			
+  </div>
+</div>
+
+
+			<div id="game">
+
+			<div id="overlay">
+			</div>
+
+			</div>
+			  
+</div>
+
+
+
+<script type="text/javascript">      
+// get what is needed
+const startBtn = document.querySelector("#start");
+const pauseBtn = document.querySelector("#pause");
+const slider = document.querySelector("#speedSlider");
+const scoreDisplay = document.querySelector("#score");
+const overlay = document.querySelector("#overlay");
+const game = document.querySelector("#game");
+let score = 0;
+let gameState;
+let speed = slider.value;
+
+// define functions
+function getRandomSize() {
+  let randomNum = Math.floor(Math.random() * 10 + 1);
+  return randomNum * 10;
+}
+
+// TODO handle removing items that are now offscreen
+function falling() {
+  const dots = document.querySelectorAll(".dot");
+  // TODO: calculate gameheight globally
+  const gameHeight = game.offsetHeight;
+  let duration = (gameHeight / speed) * 2;
+  dots.forEach((dot) => {
+    // add falling class for animation
+    dot.classList.add("falling");
+    // TODO: handle speed with duration
+    dot.style.animationDuration = duration + "s";
+  });
+}
+
+function createDot() {
+  // get random size and start position
+  const size = getRandomSize();
+  const start = Math.random() * (game.offsetWidth - size);
+  const btn = document.createElement("button");
+  btn.classList.add("dot");
+  btn.style.height = size + "px";
+  btn.style.width = size + "px";
+  btn.style.left = start + "px";
+  btn.setAttribute("data-score", calculatePoints(size));
+  game.appendChild(btn);
+}
+
+function startGame() {
+  // TODO: handle hiding startbtn
+  overlay.classList.remove("visible");
+  startBtn.style.display = "none";
+  pauseBtn.style.display = "block";
+  gameState = setInterval(function () {
+    createDot();
+    falling();
+  }, 1000);
+}
+
+function pauseGame() {
+  // TODO: handle hiding pausebtn
+  pauseBtn.style.display = "none";
+  startBtn.style.display = "block";
+  clearInterval(gameState);
+  const dots = document.querySelectorAll(".dot");
+  dots.forEach((dot) => dot.classList.remove("falling"));
+  overlay.classList.toggle("visible");
+}
+
+function calculatePoints(size) {
+  return size === 10
+    ? 10
+    : size === 20
+    ? 9
+    : size === 30
+    ? 8
+    : size === 40
+    ? 7
+    : size === 50
+    ? 6
+    : size === 60
+    ? 5
+    : size === 70
+    ? 4
+    : size === 80
+    ? 3
+    : size === 90
+    ? 2
+    : 1;
+}
+
+function dotClicked(item) {
+  let element = item;
+  let points = parseInt(item.getAttribute("data-score"));
+  score = score + points;
+  scoreDisplay.innerHTML = score;
+  // TODO: handle remove animation
+  element.remove();
+}
+
+// add event listeners
+startBtn.addEventListener("click", startGame);
+pauseBtn.addEventListener("click", pauseGame);
+
+slider.oninput = function () {
+  speed = this.value;
+};
+
+game.addEventListener("click", function (e) {
+  if (e.target.classList.contains("dot")) {
+    dotClicked(e.target);
+  }
+});
+</script>
+
+</body>
+</html>       
